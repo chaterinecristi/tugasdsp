@@ -1,0 +1,27 @@
+%accelerometer = table2array(namatable(row brp: sampe row brp,kolom brp:smpe kolom brp))
+%gravity  = table2array(namatable(row brp: sampe row brp,kolom brp:smpe kolom brp))
+%time  = table2array(namatable(row brp: sampe row brp,kolom brp:smpe kolom brp))
+time = time/1000;
+
+
+%steps:
+%get scalar acceleration value
+
+a_scalar = sqrt(sum(accelerometer.^2, 1)); %kyk hitungan pitagoras 
+%get scalar gravity value
+g_scalar = sqrt(sum(gravity.^2, 1)); 
+
+hasil = a_scalar - g_scalar; %processed array for step count
+
+plus = hasil > 0; %kasihtau data positif 0 0 1
+stepindex = [(diff(plus)==1) 0]; 
+marker = find(stepindex); %posisi langkah dihitung
+%scale marker to time
+marker = (marker-time(1))/(length(hasil)/time(length(time)));
+
+
+hold on
+plot(time,hasil);
+plot(marker, zeros(size(marker)), 'r', 'Marker', 'o');
+hold off
+langkah = numel(marker); %berapa langkahnya
